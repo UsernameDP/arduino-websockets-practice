@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      #page {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+      }
+
+      button {
+        background: white;
+        border-radius: 15px;
+        width: 50px;
+        height: 50px;
+        font-weight: 900;
+        font-size: 16px;
+      }
+
+      h1 {
+        font-family: verdana;
+      }
+    </style>
+  </head>
+  <body id="page">
+    <h1 id="dataPrint">Received data will appear here!!!</h1>
+
+    <div class="buttonContainer">
+      <button onclick="sendMessageOn()">ON</button>
+      <button onclick="sendMessageOff()">OFF</button>
+    </div>
+
+    <script>
+      var count = 0;
+
+      //192.168.2.2:3000
+
+      const socket = new WebSocket("ws:localhost:3000");
+
+      socket.addEventListener("open", function (event) {
+        console.log("opened communication");
+      });
+
+      socket.addEventListener("message", function (event) {
+        console.log("msg: " + event.data);
+        document.getElementById("dataPrint").innerHTML =
+          "button is " + event.data;
+        if (event.data == "CLICKED") {
+          document.getElementById("page").style.backgroundColor = "#ed6464";
+        } else {
+          document.getElementById("page").style.backgroundColor = "white";
+        }
+      });
+
+      function sendMessageOn() {
+        socket.send("on");
+      }
+
+      function sendMessageOff() {
+        socket.send("off");
+      }
+    </script>
+  </body>
+</html>
